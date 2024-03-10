@@ -9,6 +9,7 @@ Subscribe to Events via PHP Attribute Tags without any configuration and only vi
   * [Benefits](#benefits)
   * [Usage](#usage)
     * [Examples](#examples)
+    * [Event arguments](#event-arguments)
 <!-- TOC -->
 
 ## Installation
@@ -26,15 +27,11 @@ composer require zieglerh/pimcore-event-manager-bundle:^1.0
 
 ## Usage
 
-Create an EventSubscriber class and implement `EventManagerBundle\EventSubscriber\EventSubscriberInterface`.
-
-Make sure your class folder is defined in services.yml.
-
-Use `EnabledTrait` in your class.
-
-Create a function and define function Properties with one or more events.
-
-The arguments can be the event subject or the event class.
+- create an EventSubscriber class and implement `EventManagerBundle\EventSubscriber\EventSubscriberInterface`
+- make sure your class folder is defined in services.yml
+- use `EnabledTrait` in your class
+- create a function and define function Properties with one or more events
+- the arguments can be the event subject or the event class
 
 ```php
 #[Event(DocumentEvents::PRE_ADD)]
@@ -142,4 +139,18 @@ $this->dispatchEvent(new UserRoleEvent($this), UserRoleEvents::PRE_UPDATE);
 // and optional UserRoleEvent as event argument
 ```
 
+### Event arguments
 
+By default, autosave and save version only events are not handled by the EventSubscriber.
+
+If you require one, you must also add the attribute to the function.
+
+```php
+#[IsAutoSave]
+#[SaveVersionOnly]
+#[Event(DataObjectEvents::PRE_ADD)]
+private function doSomething(MyModel $object): void
+{
+    // implementation
+}
+```
