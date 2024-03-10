@@ -2,6 +2,15 @@
 
 Subscribe to Events via PHP Attribute Tags without any configuration and only via function arguments 
 
+<!-- TOC -->
+* [EventManagerBundle](#eventmanagerbundle)
+  * [Installation](#installation)
+    * [Composer](#composer)
+  * [Benefits](#benefits)
+  * [Usage](#usage)
+    * [Examples](#examples)
+<!-- TOC -->
+
 ## Installation
 
 ### Composer
