@@ -1,0 +1,31 @@
+{
+  "name": "zieglerh/pimcore-event-manager",
+  "description": "Bind events via PHP Attributes in EventSubscribers",
+  "type": "pimcore-bundle",
+  "license": "GPL-3.0-or-later",
+  "authors": [
+    {
+      "name": "Harald Ziegler",
+      "email": "h.ziegler@sent.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "EventManagerBundle\\": "src"
+    }
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/zieglerh/php-code-quality"
+    }
+  ],
+  "require": {
+    "php": "^8.0",
+    "pimcore/pimcore": "^11.0",
+    "symfony/dependency-injection": "^6.0"
+  },
+  "require-dev": {
+    "zieglerh/php-code-quality": "^1.0"
+  }
+}
