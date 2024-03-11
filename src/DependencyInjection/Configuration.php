@@ -27,7 +27,7 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder('event_manager');
+        $treeBuilder = new TreeBuilder('pimcore_event_manager');
         $rootNode = $treeBuilder->getRootNode();
 
         return $treeBuilder;
