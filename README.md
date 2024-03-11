@@ -9,7 +9,15 @@ Subscribe to Events via PHP Attribute Tags without any configuration and only vi
   * [Benefits](#benefits)
   * [Usage](#usage)
     * [Examples](#examples)
+      * [DataObjects](#dataobjects)
+      * [Event argument](#event-argument-)
+      * [Any event](#any-event)
+      * [Multiple classes](#multiple-classes)
     * [Event arguments](#event-arguments)
+  * [Solving problems](#solving-problems)
+    * [Good practices](#good-practices)
+    * [General mistakes](#general-mistakes)
+    * [Debugging](#debugging)
 <!-- TOC -->
 
 ## Installation
@@ -23,7 +31,7 @@ composer require zieglerh/pimcore-event-manager-bundle:^1.0
 
 - define EventSubscribers simple with PHP Attributes
 - subscribe to only used events
-- caching via symfony cache 
+- caching via symfony build cache 
 
 ## Usage
 
@@ -31,7 +39,7 @@ composer require zieglerh/pimcore-event-manager-bundle:^1.0
 - make sure your class folder is defined in services.yml
 - use `EnabledTrait` in your class
 - create a function and define function Properties with one or more events
-- the arguments can be the event subject or the event class
+- the function arguments can be the event subject or the event object
 
 ```php
 #[Event(DocumentEvents::PRE_ADD)]
@@ -43,7 +51,7 @@ To speed up bulk tasks, you can enable and disable the EventSubscriber from anyw
 
 ### Examples
 
-DataObjects
+#### DataObjects
 
 ```php
 <?php
@@ -73,7 +81,7 @@ class MyModelSubscriber implements EventSubscriberInterface
      */
     #[Event(DataObjectEvents::PRE_UPDATE)]
     #[Event(DataObjectEvents::PRE_ADD)]
-    private function doSomething(MyModel $object): void
+    public function doSomething(MyModel $object): void
     {
         // implementation
     }
@@ -81,6 +89,7 @@ class MyModelSubscriber implements EventSubscriberInterface
 
 ```
 
+#### Event argument 
 Documents with $event example
 
 ```php
@@ -117,7 +126,7 @@ class DocumentSubscriber implements EventSubscriberInterface
     }
 }
 ```
-
+#### Any event
 Basically any event from *Events.php classes
 
 ```php
@@ -139,18 +148,48 @@ $this->dispatchEvent(new UserRoleEvent($this), UserRoleEvents::PRE_UPDATE);
 // and optional UserRoleEvent as event argument
 ```
 
+#### Multiple classes
+
+You can combine logic from multiple objects
+
+```php
+#[Event(DocumentEvents::PRE_UPDATE)]
+public function doSomething(User|Role|UserRole $object): void
+{
+    // implementation
+}
+```
+
+
 ### Event arguments
 
-By default, autosave and save version only events are not handled by the EventSubscriber.
+By default, autosave and save version only events are not handled by the EventSubscriber. 
+This is contrary to the default behavior of Pimcore.
 
-If you require one, you must also add the attribute to the function.
+If you require one, you must also add the Attribute to the function.
 
 ```php
 #[IsAutoSave]
 #[SaveVersionOnly]
 #[Event(DataObjectEvents::PRE_ADD)]
-private function doSomething(MyModel $object): void
+public function doSomething(MyModel $object): void
 {
     // implementation
 }
 ```
+
+## Solving problems
+
+### Good practices
+
+- when batch importing or saving, then disable() the subscriber and do a batch update afterwards
+- use symfony message queue to start tasks in the background
+
+### General mistakes
+
+- make sure your subscriber function is public
+
+### Debugging
+
+- when you want to debug the bundle, you have to change a class, so that symfony invalidates the cache and does a rebuild
+
