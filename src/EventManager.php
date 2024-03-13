@@ -36,13 +36,13 @@ class EventManager
     /**
      * @param array              $config
      * @param ContainerInterface $locator
-     * @param LoggerInterface    $logger
+     * @param LoggerInterface    $eventSubscriberLogger
      */
     public function __construct(
         private array $config,
         #[TaggedLocator(self::SERVICE_TAG)]
         private ContainerInterface $locator,
-        private LoggerInterface $logger,
+        private LoggerInterface $eventSubscriberLogger,
     ) {
     }
 
@@ -91,7 +91,7 @@ class EventManager
         try {
             $subscribers = $this->getSubscribers($method, $object, $eventArgs);
         } catch (\Exception $exception) {
-            $this->logger->error(
+            $this->eventSubscriberLogger->error(
                 'Could not get subscribers :: {msg}', //
                 ['exception' => $exception, 'msg' => $exception->getMessage()]
             );
@@ -103,7 +103,7 @@ class EventManager
             try {
                 $subscriber = $this->locator->get($subscriber);
             } catch (\Throwable $throwable) {
-                $this->logger->critical(
+                $this->eventSubscriberLogger->critical(
                     'Could not load subscriber: {class}', //
                     ['class' => $subscriber, 'throwable' => $throwable]
                 );
@@ -111,7 +111,7 @@ class EventManager
             }
 
             if (!$subscriber instanceof EventSubscriberInterface) {
-                $this->logger->error(
+                $this->eventSubscriberLogger->error(
                     'Skipping subscriber class: {class}', //
                     ['class' => $subscriber::class]
                 );
@@ -157,7 +157,7 @@ class EventManager
                 } catch (ValidationException $exception) {
                     throw $exception;
                 } catch (\Throwable $throwable) {
-                    $this->logger->critical(
+                    $this->eventSubscriberLogger->critical(
                         'Listener threw exception: {class}', //
                         [
                             'class'     => $subscriber::class . '::' . $methodName,

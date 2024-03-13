@@ -1,0 +1,10 @@
+monolog:
+    channels: [ 'event_subscriber' ]
+    handlers:
+        event_subscriber:
+            level: debug
+            type: stream
+            path: '%kernel.logs_dir%/event_subscriber.log'
+            channels: [ 'event_subscriber' ]
+        main:
+            channels: [ '!event_subscriber' ]

@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Readme refinement
 - Configuration root name
+- Logs will be written into event_subscriber.log
 
 ## [1.0.0] - 2024-03-10
 
